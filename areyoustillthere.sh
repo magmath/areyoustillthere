@@ -15,7 +15,7 @@ MOSQUITTO_TOPIC='presence'
 SLEEP="10s"
 
 # verbose output - shows status of each health check
-DEBUG="false"
+DEBUG="true"
 
 #overload echo to add timestamps for logging
 echo_bin=`which echo`
