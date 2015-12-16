@@ -5,21 +5,17 @@ PHONE_IP="XXX.XXX.XXX.XXX"
 
 # bluetooth device id
 # tested with Pluggable BT4 USB adapater with BCM20702 chipset.
-BT_DEV="hci0"
+BLUETOOTH_DEVICE="hci0"
 
 # Mosquitto info
-MQT_SERVER='localhost'
-MQT_TOPIC='presence'
-
-# assume present when script starts so lights won't get turned on if they were already turned off.
-last_status="present"
-status=""
+MOSQUITTO_SERVER='localhost'
+MOSQUITTO_TOPIC='presence'
 
 # how long to wait between polling
-sleepTime="10s"
+SLEEP="10s"
 
 # verbose output - shows status of each health check
-debug="false"
+DEBUG="false"
 
 #overload echo to add timestamps for logging
 echo_bin=`which echo`
@@ -41,7 +37,7 @@ if [ "$?" != "0" ]; then
 	exit 1
 fi
 
-hciconfig $BT_DEV > /dev/null 2>&1
+hciconfig $BLUETOOTH_DEVICE > /dev/null 2>&1
 if [ "$?" != "0" ]; then
 	echo "No BT device found. Exiting"
 	exit 1
@@ -65,13 +61,13 @@ function check_wifi() {
 		status='present'
 	fi
 
-	if [ "$debug" == "true" ]; then
+	if [ "$DEBUG" == "true" ]; then
 		echo "wifi status; $status"
 	fi
 }
 
 function check_bluetooth() {
-	sudo l2ping -t 2 -i $BT_DEV -c1 $BT_MAC > /dev/null 2>&1
+	sudo l2ping -t 2 -i $BLUETOOTH_DEVICE -c1 $BT_MAC > /dev/null 2>&1
 	if [ "$?" == "0" ]; then
 		if [ "$status" == "absent" ]; then
 			# if the status is absent, then chage it. Otherwise we don't care.
@@ -79,31 +75,38 @@ function check_bluetooth() {
 		fi
 	fi
 
-	if [ "$debug" = "true" ]; then
+	if [ "$DEBUG" = "true" ]; then
 		echo "bt status: $status"
 	fi
 }
+	
+echo "debug is $DEBUG"
 
-echo "debug is $debug"
+function main() {
+	# assume present when script starts so lights won't get turned on if they were already turned off.
+	last_status="present"
+	status=""
 
-while true; do
-	check_wifi
-	if [ "$status" == "absent" ]; then
-		check_bluetooth
-	fi
+	while true; do
 
-	if [ "$status" != "$last_status" ]; then
-		echo "status changed from $last_status to $status"
-		# save for later
-		last_status=$status
+		check_wifi
+		if [ "$status" == "absent" ]; then
+			check_bluetooth
+		fi
 
-		# update the status
-		mosquitto_pub -t $MQT_TOPIC -h $MQT_SERVER -m "$status"
+		if [ "$status" != "$last_status" ]; then
+			echo "status changed from $last_status to $status"
+			# save for later
+			last_status=$status
 
-
-	fi
+			# update the status
+			mosquitto_pub -t $MOSQUITTO_TOPIC -h $MOSQUITTO_SERVER -m "$status"
 
 
-	# wait
-	sleep $sleepTime
-done
+		fi
+
+
+		# wait
+		sleep $SLEEP
+	done
+}
