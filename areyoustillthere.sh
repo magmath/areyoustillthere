@@ -1,26 +1,26 @@
 #!/bin/bash
 
-BT_MAC="XX:XX:XX:XX:XX:XX"
-PHONE_IP="XXX.XXX.XXX.XXX"
+readonly BT_MAC="XX:XX:XX:XX:XX:XX"
+readonly PHONE_IP="XXX.XXX.XXX.XXX"
 
 # bluetooth device id
 # tested with Pluggable BT4 USB adapater with BCM20702 chipset.
-BLUETOOTH_DEVICE="hci0"
+readonly BLUETOOTH_DEVICE="hci0"
 
 # Mosquitto info
-MOSQUITTO_SERVER='localhost'
-MOSQUITTO_TOPIC='presence'
+readonly MOSQUITTO_SERVER='localhost'
+readonly MOSQUITTO_TOPIC='presence'
 
 # how long to wait between polling
-SLEEP="10s"
+readonly SLEEP="5s"
 
 # verbose output - shows status of each health check
-DEBUG="true"
+readonly DEBUG="false"
 
 #overload echo to add timestamps for logging
-echo_bin=`which echo`
+readonly ECHO_BIN=`which echo`
 function echo() {
-    $echo_bin `date` $*
+    $ECHO_BIN `date` $*
 }
 
 # Check for mosquitto pub tool
