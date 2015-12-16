@@ -80,9 +80,8 @@ function check_bluetooth() {
 	fi
 }
 	
-echo "debug is $DEBUG"
-
 function main() {
+	echo "debug is $DEBUG"
 	# assume present when script starts so lights won't get turned on if they were already turned off.
 	last_status="present"
 	status=""
@@ -110,3 +109,6 @@ function main() {
 		sleep $SLEEP
 	done
 }
+
+main
+
