@@ -85,6 +85,9 @@ function main() {
 	last_status="present"
 	status=""
 
+	absent_counter=0
+	absent_send=2
+
 	while true; do
 
 		check_wifi
@@ -99,7 +102,15 @@ function main() {
 
 			# update the status
 			mosquitto_pub -t $MOSQUITTO_TOPIC -h $MOSQUITTO_SERVER -m "$status"
-
+		else 
+			if [ "$absent_counter" < "$absent_send" ]; then
+				absent_counter = $(( $absent_counter + 1 ))
+				echo "incrementing absent_counter"
+			else 
+				echo "absent counter reached"
+				absent_counter = 0
+				echo "sending absent"
+			fi
 
 		fi
 
