@@ -103,21 +103,26 @@ function main() {
 			# update the status
 			if [[ "$status" == "present" ]]; then
 				mosquitto_pub -t $MOSQUITTO_TOPIC -h $MOSQUITTO_SERVER -m "$status"
+				absent_counter=0
 			fi
 		else 
 			if [[ "$status" == "absent" ]]; then
 				if [[ "$absent_counter" < "$absent_send" ]]; then
-					if [[ "$debug" == "true" ]]; then
-						echo "incrementing counter"
+					if [[ "$DEBUG" == "true" ]]; then
+						echo "incrementing counter: $absent_counter"
 					fi
-					absent_counter=$($absent_counter + 1)
-				else
-					if [[ "$debug" == "true" ]]; then
+					absent_counter=$(( $absent_counter + 1 ))
+				elif [[ "$absent_counter" == "$absent_send" ]]; then
+					if [[ "$DEBUG" == "true" ]]; then
 						echo "Sending absent"
 					fi
+					absent_counter=$(( $absent_counter + 1 ))
 					mosquitto_pub -t $MOSQUITTO_TOPIC -h $MOSQUITTO_SERVER -m "$status"
+				else
+					if [[ "$DEBUG" == "true" ]]; then
+						echo "still gone."
+					fi				
 				fi
-
 			fi
 		fi
 
