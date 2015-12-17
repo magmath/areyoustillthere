@@ -1,7 +1,6 @@
 #!/bin/bash
 
-readonly BT_MAC="XX:XX:XX:XX:XX:XX"
-readonly PHONE_IP="XXX.XXX.XXX.XXX"
+. .phone
 
 # bluetooth device id
 # tested with Pluggable BT4 USB adapater with BCM20702 chipset.
