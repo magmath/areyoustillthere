@@ -107,9 +107,14 @@ function main() {
 		else 
 			if [[ "$status" == "absent" ]]; then
 				if [[ "$absent_counter" < "$absent_send" ]]; then
+					if [[ "$debug" == "true" ]]; then
+						echo "incrementing counter"
+					fi
 					absent_counter=$($absent_counter + 1)
 				else
-					echo "Sending absent"
+					if [[ "$debug" == "true" ]]; then
+						echo "Sending absent"
+					fi
 					mosquitto_pub -t $MOSQUITTO_TOPIC -h $MOSQUITTO_SERVER -m "$status"
 				fi
 
