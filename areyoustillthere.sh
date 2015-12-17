@@ -104,7 +104,7 @@ function main() {
 			mosquitto_pub -t $MOSQUITTO_TOPIC -h $MOSQUITTO_SERVER -m "$status"
 		else 
 			if [ "$absent_counter" < "$absent_send" ]; then
-				absent_counter=$(( $absent_counter + 1 ))
+				absent_counter=$( $absent_counter + 1 )
 				echo "incrementing absent_counter"
 			else 
 				echo "absent counter reached"
