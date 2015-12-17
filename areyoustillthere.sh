@@ -102,13 +102,17 @@ function main() {
 
 			# update the status
 			mosquitto_pub -t $MOSQUITTO_TOPIC -h $MOSQUITTO_SERVER -m "$status"
+
+			if [[ "$absent_counter" == "$absent_send" ]]; then
+				absent_counter = 0
+			fi
+
 		else 
 			if [ "$absent_counter" < "$absent_send" ]; then
 				absent_counter=$( $absent_counter + 1 )
 				echo "incrementing absent_counter"
 			else 
 				echo "absent counter reached"
-				absent_counter=0
 				echo "sending absent"
 			fi
 
