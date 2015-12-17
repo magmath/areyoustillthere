@@ -2,5 +2,9 @@
 Wifi and Bluetooth based presence detection that publishes to mosquitto.
 
 
-Replace BT_MAC and PHONE_IP with your information. PHONE_IP can be replaced with a hostname.
 
+# .phone example file
+#BT MAC of your device
+BLUETOOTH_MAC="XX:XX:XX:XX:XX:XX"
+#IP of your device on your network
+PHONE_IP="xxx.xxx.xxx.xxx"
