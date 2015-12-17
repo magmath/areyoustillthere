@@ -107,7 +107,7 @@ function main() {
 		else 
 			if [[ "$status" == "absent" ]]; then
 				if [[ "$absent_counter" < "$absent_send" ]]; then
-					absent_counter = $($absent_counter + 1)
+					absent_counter=$($absent_counter + 1)
 				else
 					echo "Sending absent"
 					mosquitto_pub -t $MOSQUITTO_TOPIC -h $MOSQUITTO_SERVER -m "$status"
